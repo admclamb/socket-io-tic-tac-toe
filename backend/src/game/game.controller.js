@@ -1,5 +1,4 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
-const { Server } = require("socket.io");
 const service = require("./game.service");
 
 function create(req, res, next) {
