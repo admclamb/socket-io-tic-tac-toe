@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ErrorAlert from "../../errors/ErrorAlert/ErrorAlert";
 
 const Game = () => {
   const [gameMatrix, setGameMatrix] = useState([
@@ -7,15 +8,23 @@ const Game = () => {
     ["", "", ""],
   ]);
   const [turn, setTurn] = useState("x");
+  const [error, setError] = useState(null);
   const makeMove = ({ target }) => {
-    const col = target.getAttribute("data-col");
-    const row = target.getAttribute("data-row");
-    setGameMatrix((curr) => {
-      const temp = curr;
-      temp[row][col] = turn;
-      return temp;
-    });
-    setTurn((c) => (c === "x" ? "o" : "x"));
+    try {
+      const col = target.getAttribute("data-col");
+      const row = target.getAttribute("data-row");
+      if (gameMatrix[row][col]) {
+        throw new Error("This cell is already occupied");
+      }
+      setGameMatrix((curr) => {
+        const temp = curr;
+        temp[row][col] = turn;
+        return temp;
+      });
+      setTurn((c) => (c === "x" ? "o" : "x"));
+    } catch (err) {
+      setError(err);
+    }
   };
 
   const clearBoard = () => {
@@ -27,6 +36,7 @@ const Game = () => {
   };
   return (
     <>
+      <ErrorAlert error={error} setError={setError} />
       <ul className="game-grid">
         {gameMatrix.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
@@ -42,7 +52,7 @@ const Game = () => {
           ))
         )}
       </ul>
-      <div className="flex justify-center">
+      <div className="flex justify-center mt-3">
         <button
           className="px-3 py-2 bg-neutral-800 text-white w-24 rounded"
           onClick={clearBoard}
