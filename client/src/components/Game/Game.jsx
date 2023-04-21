@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ErrorAlert from "../../errors/ErrorAlert/ErrorAlert";
-
+import { getWinner } from "../../utils/getWinner";
 const Game = () => {
   const [gameMatrix, setGameMatrix] = useState([
     ["", "", ""],
@@ -8,11 +8,16 @@ const Game = () => {
     ["", "", ""],
   ]);
   const [turn, setTurn] = useState("x");
+  const [winner, setWinner] = useState(null);
   const [error, setError] = useState(null);
   const makeMove = ({ target }) => {
     try {
+      setError(null);
       const col = target.getAttribute("data-col");
       const row = target.getAttribute("data-row");
+      if (winner) {
+        throw new Error("The game is already over");
+      }
       if (gameMatrix[row][col]) {
         throw new Error("This cell is already occupied");
       }
@@ -27,17 +32,39 @@ const Game = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(gameMatrix);
+    const gameWinner = getWinner(gameMatrix);
+    console.log(gameWinner);
+    if (gameWinner) {
+      setWinner(gameWinner);
+    }
+  }, [JSON.stringify(gameMatrix)]);
+
   const clearBoard = () => {
     setGameMatrix([
       ["", "", ""],
       ["", "", ""],
       ["", "", ""],
     ]);
+    setWinner(null);
+    setError(null);
   };
+  console.log(winner !== null);
   return (
     <>
       <ErrorAlert error={error} setError={setError} />
-      <ul className="game-grid">
+      <div className="mb-3">
+        {winner && (
+          <p className="text-center text-xl">
+            Game Winner: <span className="font-bold">{winner}</span>
+          </p>
+        )}
+      </div>
+      <ul
+        className="game-grid disabled:cursor-not-allowed"
+        disabled={`${winner !== null}`}
+      >
         {gameMatrix.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
             <li
