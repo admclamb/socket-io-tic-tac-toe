@@ -49,6 +49,7 @@ const Game = () => {
     ]);
     setWinner(null);
     setError(null);
+    setTurn("x");
   };
   console.log(winner !== null);
   return (
