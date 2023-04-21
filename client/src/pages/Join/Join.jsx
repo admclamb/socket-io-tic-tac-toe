@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import Layout from "../../layout/Layout";
 import Hero from "../../components/Hero/Hero";
 import RoomInput from "../../components/RoomInput/RoomInput";
+import { useNavigate } from "react-router-dom";
 const Join = () => {
   const [roomName, setRoomName] = useState("");
   const [isJoining, setIsJoining] = useState(false);
+  const navigate = useNavigate();
   const joinRoom = async (event) => {
     try {
       setIsJoining(true);
       event.preventDefault();
-
-      console.log("JOINING", roomName);
+      navigate(`/room/${roomName}`);
     } catch (err) {
     } finally {
       setIsJoining(false);

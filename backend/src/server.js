@@ -1,12 +1,14 @@
 const { PORT = 5000 } = process.env;
 const app = require("./app");
 const http = require("http");
-const { Server } = require("socket.io");
 const server = http.createServer(app);
-const io = new Server(server);
+const io = require("socket.io")(server, { cors: { origin: "*" } });
 
 io.on("connection", (socket) => {
   console.log("a user connected");
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
 });
 
 server.listen(PORT, linstener);
