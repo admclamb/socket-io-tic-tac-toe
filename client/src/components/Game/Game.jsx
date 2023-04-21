@@ -17,21 +17,40 @@ const Game = () => {
     });
     setTurn((c) => (c === "x" ? "o" : "x"));
   };
+
+  const clearBoard = () => {
+    setGameMatrix([
+      ["", "", ""],
+      ["", "", ""],
+      ["", "", ""],
+    ]);
+  };
   return (
-    <ul className="game-grid">
-      {gameMatrix.map((row, rowIndex) =>
-        row.map((cell, colIndex) => (
-          <li
-            className="cell border hover:bg-neutral-100 duration-200 ease-out active:bg-neutral-200 text-8xl font-semibold uppercase"
-            data-row={rowIndex}
-            data-col={colIndex}
-            onClick={makeMove}
-          >
-            {cell}
-          </li>
-        ))
-      )}
-    </ul>
+    <>
+      <ul className="game-grid">
+        {gameMatrix.map((row, rowIndex) =>
+          row.map((cell, colIndex) => (
+            <li
+              className="cell border hover:bg-neutral-100 duration-200 ease-out active:bg-neutral-200 text-8xl font-semibold uppercase"
+              data-row={rowIndex}
+              data-col={colIndex}
+              onClick={makeMove}
+              role="button"
+            >
+              {cell}
+            </li>
+          ))
+        )}
+      </ul>
+      <div className="flex justify-center">
+        <button
+          className="px-3 py-2 bg-neutral-800 text-white w-24 rounded"
+          onClick={clearBoard}
+        >
+          Reset
+        </button>
+      </div>
+    </>
   );
 };
 
